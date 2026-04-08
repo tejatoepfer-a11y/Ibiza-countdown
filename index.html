@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ibiza Countdown</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 5vw, 3.5rem);
+      margin-bottom: 0.3em;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      background: linear-gradient(90deg, #f7971e, #ffd200);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: clamp(0.9rem, 2.5vw, 1.3rem);
+      opacity: 0.75;
+      margin-bottom: 2.5em;
+      letter-spacing: 0.05em;
+    }
+
+    .countdown {
+      display: flex;
+      gap: clamp(12px, 3vw, 32px);
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .countdown .unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 90px;
+    }
+
+    .countdown .value {
+      font-size: clamp(2.5rem, 8vw, 5.5rem);
+      font-weight: 700;
+      line-height: 1;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      padding: 0.2em 0.35em;
+      min-width: 1.8em;
+      text-align: center;
+      backdrop-filter: blur(6px);
+      transition: transform 0.3s ease;
+    }
+
+    .countdown .value:hover {
+      transform: scale(1.06);
+    }
+
+    .countdown .label {
+      margin-top: 0.5em;
+      font-size: clamp(0.7rem, 2vw, 1rem);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      opacity: 0.6;
+    }
+
+    .done {
+      display: none;
+      text-align: center;
+    }
+
+    .done h2 {
+      font-size: clamp(2rem, 6vw, 4rem);
+      background: linear-gradient(90deg, #f7971e, #ffd200);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(1.04); }
+    }
+
+    /* Decorative floating circles */
+    .bg-circle {
+      position: fixed;
+      border-radius: 50%;
+      opacity: 0.07;
+      pointer-events: none;
+    }
+
+    .bg-circle:nth-child(1) {
+      width: 400px; height: 400px;
+      background: #ffd200;
+      top: -100px; left: -100px;
+    }
+
+    .bg-circle:nth-child(2) {
+      width: 300px; height: 300px;
+      background: #f7971e;
+      bottom: -80px; right: -80px;
+    }
+
+    .bg-circle:nth-child(3) {
+      width: 200px; height: 200px;
+      background: #fff;
+      top: 50%; right: 10%;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-circle"></div>
+  <div class="bg-circle"></div>
+  <div class="bg-circle"></div>
+
+  <h1>Ibiza Countdown</h1>
+  <p class="subtitle">June 11, 2026 &mdash; 6:00 PM</p>
+
+  <div class="countdown" id="countdown">
+    <div class="unit">
+      <span class="value" id="days">--</span>
+      <span class="label">Days</span>
+    </div>
+    <div class="unit">
+      <span class="value" id="hours">--</span>
+      <span class="label">Hours</span>
+    </div>
+    <div class="unit">
+      <span class="value" id="minutes">--</span>
+      <span class="label">Minutes</span>
+    </div>
+    <div class="unit">
+      <span class="value" id="seconds">--</span>
+      <span class="label">Seconds</span>
+    </div>
+  </div>
+
+  <div class="done" id="done">
+    <h2>It's Time! Let's Go!</h2>
+  </div>
+
+  <script>
+    const TARGET = new Date("2026-06-11T18:00:00").getTime();
+
+    function pad(n) {
+      return String(n).padStart(2, "0");
+    }
+
+    function tick() {
+      const now = Date.now();
+      const diff = TARGET - now;
+
+      if (diff <= 0) {
+        document.getElementById("countdown").style.display = "none";
+        document.getElementById("done").style.display = "block";
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      document.getElementById("days").textContent = days;
+      document.getElementById("hours").textContent = pad(hours);
+      document.getElementById("minutes").textContent = pad(minutes);
+      document.getElementById("seconds").textContent = pad(seconds);
+
+      requestAnimationFrame(tick);
+    }
+
+    tick();
+    setInterval(tick, 1000);
+  </script>
+</body>
+</html>
