@@ -17,22 +17,35 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: url('IMG_3767.jpeg') no-repeat center center fixed;
-      background-size: cover;
+      background: #0f0c29;
       color: #fff;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       overflow: hidden;
     }
 
-    body::before {
-      content: '';
+    .bg-slide {
+      position: fixed;
+      inset: 0;
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+      z-index: 0;
+    }
+
+    .bg-slide.active {
+      opacity: 1;
+    }
+
+    .bg-overlay {
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, 0.45);
       z-index: 0;
     }
 
-    body > * {
+    body > *:not(.bg-slide):not(.bg-overlay) {
       position: relative;
       z-index: 1;
     }
@@ -115,37 +128,12 @@
       50% { opacity: 0.85; transform: scale(1.04); }
     }
 
-    /* Decorative floating circles */
-    .bg-circle {
-      position: fixed;
-      border-radius: 50%;
-      opacity: 0.07;
-      pointer-events: none;
-    }
-
-    .bg-circle:nth-child(1) {
-      width: 400px; height: 400px;
-      background: #ffd200;
-      top: -100px; left: -100px;
-    }
-
-    .bg-circle:nth-child(2) {
-      width: 300px; height: 300px;
-      background: #f7971e;
-      bottom: -80px; right: -80px;
-    }
-
-    .bg-circle:nth-child(3) {
-      width: 200px; height: 200px;
-      background: #fff;
-      top: 50%; right: 10%;
-    }
   </style>
 </head>
 <body>
-  <div class="bg-circle"></div>
-  <div class="bg-circle"></div>
-  <div class="bg-circle"></div>
+  <div class="bg-slide active" style="background-image: url('IMG_3767.jpeg')"></div>
+  <div class="bg-slide" style="background-image: url('PHOTO-2026-04-09-07-29-13.jpg')"></div>
+  <div class="bg-overlay"></div>
 
   <h1>Ibiza Countdown</h1>
   <p class="subtitle">June 11, 2026 &mdash; 6:00 PM</p>
@@ -205,6 +193,15 @@
 
     tick();
     setInterval(tick, 1000);
+
+    // Rotate background images every 4 seconds
+    const slides = document.querySelectorAll('.bg-slide');
+    let current = 0;
+    setInterval(() => {
+      slides[current].classList.remove('active');
+      current = (current + 1) % slides.length;
+      slides[current].classList.add('active');
+    }, 4000);
   </script>
 </body>
 </html>
